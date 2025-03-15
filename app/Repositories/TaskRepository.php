@@ -25,4 +25,9 @@ class TaskRepository extends BaseRepository
 
         return $task->update($attributes);
     }
+
+    public function getByToken(string $token): Task|null
+    {
+        return $this->model->where('access_token', $token)->first();
+    }
 }

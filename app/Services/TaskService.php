@@ -68,14 +68,18 @@ class TaskService
         ]);
     }
 
-    public function getPublicTask($id, $token)
+    public function getPublicTask(string $token): Task
     {
-        $task = Task::findOrFail($id);
+        $task = $this->taskRepository->getByToken($token);
 
-        if ($task->access_token !== $token || $task->access_token_expires_at < now()) {
-            return response()->json(['message' => 'Invalid or expired token'], 403);
+        if (!$task) {
+            abort(404);
         }
 
-        return response()->json($task);
+        if ($task->access_token !== $token || $task->access_token_expires_at < now()) {
+            abort(404, 'Invalid or expired token');
+        }
+
+        return $task;
     }
 }

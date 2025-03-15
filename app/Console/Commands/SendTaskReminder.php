@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\Task;
 use App\Notifications\TaskReminderNotification;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SendTaskReminder extends Command
 {
@@ -13,7 +15,7 @@ class SendTaskReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-task-reminder';
+    protected $signature = 'tasks:send-task-reminder';
 
     /**
      * The console command description.
@@ -27,10 +29,19 @@ class SendTaskReminder extends Command
      */
     public function handle()
     {
-        $tasks = Task::where('deadline', now()->addDay())->get();
+        $tomorrow = Carbon::tomorrow()->toDateString();
+
+        $tasks = Task::where('deadline', $tomorrow)
+            ->where('status', '!=', 'done')
+            ->with('user')
+            ->get();
 
         foreach ($tasks as $task) {
             $task->user->notify(new TaskReminderNotification($task));
+
+            Log::info("Sent reminder for task ID: {$task->id} to user {$task->user->email}");
         }
+
+        $this->info($tasks->count() . " reminders sent.");
     }
 }

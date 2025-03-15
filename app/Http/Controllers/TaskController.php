@@ -59,16 +59,20 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task deleted!');
     }
 
-    public function generatePublicLink(Task $task)
+    public function generatePublicLink(Task $task): \Illuminate\Http\JsonResponse
     {
         $token = Str::random(32);
         $this->taskService->generateAccessTokenForTask($task, $token);
 
-        return response()->json(['url' => url("/tasks/{$task->id}?token={$token}")]);
+        return response()->json([
+            'url' => route('tasks.viewPublicTask', $token)
+        ]);
     }
 
-    public function viewPublicTask($id, $token)
+    public function viewPublicTask(string $token)
     {
-        return $this->taskService->getPublicTask($id, $token);
+        $task = $this->taskService->getPublicTask($token);
+
+        return view('tasks.view', compact('task'));
     }
 }

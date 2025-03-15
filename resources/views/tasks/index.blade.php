@@ -84,6 +84,9 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
+                        <a class="btn btn-sm btn-primary generate-link-btn" data-task-id="{{ $task->id }}">
+                            Generate public link & copy
+                        </a>
                     </td>
                 </tr>
             @endforeach
@@ -91,5 +94,5 @@
         </tbody>
     </table>
 
-    {{ $tasks->withQueryString()->links() }}
+    {{ $tasks->withQueryString()->links('custom.pagination') }}
 @endsection
