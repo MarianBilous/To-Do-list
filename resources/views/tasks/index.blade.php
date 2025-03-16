@@ -87,6 +87,9 @@
                         <a class="btn btn-sm btn-primary generate-link-btn" data-task-id="{{ $task->id }}">
                             Generate public link & copy
                         </a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('tasks.history.index', $task) }}">
+                            View history changes
+                        </a>
                     </td>
                 </tr>
             @endforeach
