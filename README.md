@@ -18,7 +18,8 @@ Ten projekt jest systemem zarządzania zadaniami, który pozwala użytkownikom n
 
 ### 2. Instalacja zależności
 - composer install
-- npm install && npm run dev
+- npm install
+- npm run dev
 
 ### 3. Konfiguracja pliku .env
 - Utwórz plik `.env` na podstawie `.env.example`:
