@@ -4,6 +4,6 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Welcome to Ro-Do-list project!</h2>
+        <h2>Welcome to {{ env('APP_NAME') }} project!</h2>
     </div>
 @endsection

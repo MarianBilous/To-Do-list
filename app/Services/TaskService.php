@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Task;
 use App\Repositories\TaskRepository;
-use Illuminate\Support\Facades\Auth;
 
 class TaskService
 {
@@ -41,6 +40,11 @@ class TaskService
         return $tasks->paginate(10);
     }
 
+    public function getAllTasksForUser($userId)
+    {
+        return $this->taskRepository->getAllByUserId($userId);
+    }
+
     public function createTaskForUser(array $attributes): Task
     {
         return $this->taskRepository->createForUser($attributes);
@@ -53,10 +57,6 @@ class TaskService
 
     public function deleteTask(Task $task): bool
     {
-        if ($task->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         return $task->delete();
     }
 
@@ -81,5 +81,10 @@ class TaskService
         }
 
         return $task;
+    }
+
+    public function findByIdAndUserId(int $id, int $userId): ?Task
+    {
+        return $this->taskRepository->findByIdAndUserId($id, $userId);
     }
 }

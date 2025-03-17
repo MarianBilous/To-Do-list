@@ -26,14 +26,6 @@ class TaskObserver
     }
 
     /**
-     * Handle the Task "deleted" event.
-     */
-    public function deleted(Task $task): void
-    {
-        $this->handle($task, 'deleted');
-    }
-
-    /**
      * Handle the Task "restored" event.
      */
     public function restored(Task $task): void
@@ -66,7 +58,6 @@ class TaskObserver
                 $data = ['changes' => $changes];
                 break;
 
-            case 'deleted':
             case 'forceDeleted':
                 $data = ['deleted_at' => now()];
                 break;

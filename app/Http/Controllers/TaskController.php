@@ -7,7 +7,9 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Repositories\TaskRepository;
 use App\Services\TaskService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class TaskController extends Controller
@@ -26,11 +28,15 @@ class TaskController extends Controller
 
     public function create()
     {
+        Gate::authorize('create', Task::class);
+
         return view('tasks.form');
     }
 
     public function store(TaskRequest $request)
     {
+        Gate::authorize('create', Task::class);
+
         $this->taskService->createTaskForUser($request->validated());
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully!');
@@ -38,15 +44,15 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        if ($task->user_id !== Auth::id()) {
-            abort(403);
-        }
+        Gate::authorize('view', $task);
 
         return view('tasks.form', compact('task'));
     }
 
     public function update(TaskRequest $request, Task $task)
     {
+        Gate::authorize('update', $task);
+
         $this->taskService->updateTaskForUser($request->validated(), $task);
 
         return redirect()->route('tasks.index')->with('success', 'Task updated!');
@@ -54,13 +60,17 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        Gate::authorize('delete', $task);
+
         $this->taskService->deleteTask($task);
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted!');
     }
 
-    public function generatePublicLink(Task $task): \Illuminate\Http\JsonResponse
+    public function generatePublicLink(Task $task): JsonResponse
     {
+        Gate::authorize('view', $task);
+
         $token = Str::random(32);
         $this->taskService->generateAccessTokenForTask($task, $token);
 

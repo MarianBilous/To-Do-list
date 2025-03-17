@@ -19,15 +19,21 @@ class TaskRepository extends BaseRepository
 
     public function updateForUser(array $attributes, Task $task): bool
     {
-        if ($task->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         return $task->update($attributes);
     }
 
     public function getByToken(string $token): Task|null
     {
         return $this->model->where('access_token', $token)->first();
+    }
+
+    public function getAllByUserId($userId)
+    {
+        return $this->model->where('user_id', $userId)->get();
+    }
+
+    public function findByIdAndUserId($id, $userId)
+    {
+        return $this->model->where('user_id', $userId)->find($id);
     }
 }

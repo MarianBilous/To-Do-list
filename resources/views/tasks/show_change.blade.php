@@ -20,7 +20,7 @@
         @elseif($history->action == 'created')
             <h5>Data at creation:</h5>
             @foreach(json_decode($history->data, true)['task_data'] as $field => $data)
-                <li><strong>{{ ucfirst($field) }}:</strong> value: {{ $data ?? 'none'}}</li>
+                <li><strong>{{ ucfirst($field) }}:</strong> {{ $data ?? 'none'}}</li>
             @endforeach
         @endif
     </div>
